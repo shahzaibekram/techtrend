@@ -1,16 +1,16 @@
-# service.yaml
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "techtrends.fullname" . }}
-  namespace: {{ .Values.namespace.name }}
   labels:
-    app: {{ include "techtrends.fullname" . }}
+    app: techtrends
+  name: shahzaib2468/techtrend
+  namespace: {{ .Values.namespace.name }} 
 spec:
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-      protocol: {{ .Values.service.protocol }}
+  - port: {{ .Values.service.port }} 
+    protocol: TCP
+    targetPort: {{ .Values.service.port }}
   selector:
-    app: {{ include "techtrends.fullname" . }}
+    app: nginx
+    tag: alpine
+  type: {{ .Values.service.type }} 
