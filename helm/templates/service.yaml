@@ -1,13 +1,16 @@
+# service.yaml
+
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "techtrends.fullname" . }}
   namespace: {{ .Values.namespace.name }}
+  labels:
+    app: {{ include "techtrends.fullname" . }}
 spec:
   ports:
-  - name: http
-    port: {{ .Values.service.port }}
-    targetPort: {{ .Values.service.targetPort }}
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: {{ .Values.service.protocol }}
   selector:
-    app: techtrends
-  type: {{ .Values.service.type }}
+    app: {{ include "techtrends.fullname" . }}
