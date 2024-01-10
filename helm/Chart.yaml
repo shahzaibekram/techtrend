@@ -1,8 +1,11 @@
-apiVersion: v1
+# helm/techtrends/Chart.yaml
+
+apiVersion: v2
 name: techtrends
-keywords:
-  - techtrends
+description: A Helm chart for deploying the TechTrends application
 version: 1.0.0
 maintainers:
-  - name: Tech Krown
-    email: contact@techkrown.com
+  - name: Shahzaib
+    email: shahzebekram2468@gmail.com
+keywords:
+  - techtrends
