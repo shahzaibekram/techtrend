@@ -20,5 +20,6 @@ RUN python init_db.py
 #EXPOSE 3111
 
 # Command to run your application
-CMD ["python", "app.py", "0.0.0.0:3111"]
+CMD ["python", "app.py", "0.0.0.0:3111", "--debug"]
+# CMD ["python", "app.py", "0.0.0.0:3111"]
 #CMD ["gunicorn", "--bind", "0.0.0.0:3111", "app:app"]
