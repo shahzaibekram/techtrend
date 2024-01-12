@@ -82,7 +82,15 @@ def healthz():
 def status():
     return jsonify({"status": "ok", "version": "1.0.0"})
 
+# Metrics endpoint
+@app.route('/metrics')
+def metrics():
+    connection = get_db_connection()
+    post_count = len(connection.execute('SELECT * FROM posts').fetchall())
+    connection.close()
+
+    return jsonify({"status": "ok", "post_count": post_count, "db_connection_count": metrics.db_con_count()})
+
 # Start the application on port 3111
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='3111')
-
