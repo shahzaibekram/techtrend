@@ -1,5 +1,6 @@
 import sqlite3
 import logging
+import sys
 from flask import Flask, jsonify, render_template, request, url_for, redirect, flash
 
 # Function to get a database connection.
@@ -21,12 +22,12 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 
 # Set up logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 logger = logging.getLogger(__name__)
 
 # Define metrics for Prometheus
 from prometheus_flask_exporter import PrometheusMetrics
-prometheus_metrics = PrometheusMetrics(app)
+metrics = PrometheusMetrics(app)
 
 # Define the main route of the web application
 @app.route('/')
@@ -45,11 +46,13 @@ def post(post_id):
         logger.warning(f"Requested post with ID {post_id} not found.")
         return render_template('404.html'), 404
     else:
+        logger.info(f"Accessed article: {post['title']}")
         return render_template('post.html', post=post)
 
 # Define the About Us page
 @app.route('/about')
 def about():
+    logger.info("Accessed 'About Us' page")
     return render_template('about.html')
 
 # Define the post creation functionality
@@ -84,13 +87,14 @@ def status():
 
 # Metrics endpoint
 @app.route('/metrics')
-def metrics():
+def app_metrics():
     connection = get_db_connection()
     post_count = len(connection.execute('SELECT * FROM posts').fetchall())
     connection.close()
 
-    return jsonify({"status": "ok", "post_count": post_count, "db_connection_count": prometheus_metrics.db_con_count()})
+    return jsonify({"status": "ok", "post_count": post_count, "db_connection_count": metrics.db_con_count()})
 
 # Start the application on port 3111
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='3111')
+
