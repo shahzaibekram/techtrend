@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 # Define metrics for Prometheus
 from prometheus_flask_exporter import PrometheusMetrics
-metrics = PrometheusMetrics(app)
+prometheus_metrics = PrometheusMetrics(app)
 
 # Define the main route of the web application
 @app.route('/')
@@ -89,7 +89,7 @@ def metrics():
     post_count = len(connection.execute('SELECT * FROM posts').fetchall())
     connection.close()
 
-    return jsonify({"status": "ok", "post_count": post_count, "db_connection_count": metrics.db_con_count()})
+    return jsonify({"status": "ok", "post_count": post_count, "db_connection_count": prometheus_metrics.db_con_count()})
 
 # Start the application on port 3111
 if __name__ == "__main__":
