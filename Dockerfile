@@ -17,9 +17,8 @@ COPY . .
 RUN python init_db.py
 
 # Expose the port on which the application will run
-#EXPOSE 3111
+EXPOSE 3111
 
 # Command to run your application
-CMD ["python", "app.py", "0.0.0.0:3111", "--debug"]
-# CMD ["python", "app.py", "0.0.0.0:3111"]
+CMD ["python", "app.py"]
 #CMD ["gunicorn", "--bind", "0.0.0.0:3111", "app:app"]
