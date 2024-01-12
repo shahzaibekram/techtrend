@@ -1,5 +1,3 @@
-# helm/techtrends/values-staging.yaml
-
 namespace:
   name: staging
 

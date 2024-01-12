@@ -1,0 +1,19 @@
+## Docker commands used to build the application 
+# TODO: docker build -t techtrends .
+
+## Docker commands used to run the application
+# TODO: docker run -d -p 7111:3111 techtrend
+
+## Docker commands used to get the application logs
+# TODO: docker logs 65bb2835c292
+
+## Logs from the container running the TechTrends application
+# TODO:  * Serving Flask app 'app' (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://172.17.0.2:3111/ (Press CTRL+C to quit)
+ 

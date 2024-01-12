@@ -1,39 +1,30 @@
-# helm/techtrends/templates/deploy.yaml
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "techtrends.fullname" . }}
   namespace: {{ .Values.namespace.name }}
-  labels:
-    app: {{ include "techtrends.fullname" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "techtrends.fullname" . }}
+      app: techtrends
   template:
     metadata:
       labels:
-        app: {{ include "techtrends.fullname" . }}
+        app: techtrends
     spec:
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          ports:
-            - containerPort: {{ .Values.containerPort }}
-          resources:
-            requests:
-              memory: {{ .Values.resources.requests.memory }}
-              cpu: {{ .Values.resources.requests.cpu }}
-            limits:
-              memory: {{ .Values.resources.limits.memory }}
-              cpu: {{ .Values.resources.limits.cpu }}
-          livenessProbe:
-            httpGet:
-              path: {{ .Values.livenessProbe.path }}
-              port: {{ .Values.livenessProbe.port }}
-          readinessProbe:
-            httpGet:
-              path: {{ .Values.readinessProbe.path }}
-              port: {{ .Values.readinessProbe.port }}
+      - name: techtrends
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.containerPort }}
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.livenessProbe.path }}
+            port: {{ .Values.livenessProbe.port }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.readinessProbe.path }}
+            port: {{ .Values.readinessProbe.port }}
