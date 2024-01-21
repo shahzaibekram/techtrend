@@ -1,13 +1,18 @@
 import sqlite3
-import logging
-import sys
+
 from flask import Flask, jsonify, render_template, request, url_for, redirect, flash
+from werkzeug.exceptions import abort
+
+# Global variable to track database connection count
+db_connection_count = 0
 
 # Function to get a database connection.
 # This function connects to the database with the name `database.db`
 def get_db_connection():
+    global db_connection_count
     connection = sqlite3.connect('database.db')
     connection.row_factory = sqlite3.Row
+    db_connection_count += 1
     return connection
 
 # Function to get a post using its ID
@@ -20,14 +25,6 @@ def get_post(post_id):
 # Define the Flask application
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
-
-# Set up logging
-logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-logger = logging.getLogger(__name__)
-
-# Define metrics for Prometheus
-from prometheus_flask_exporter import PrometheusMetrics
-metrics = PrometheusMetrics(app)
 
 # Define the main route of the web application
 @app.route('/')
@@ -43,16 +40,13 @@ def index():
 def post(post_id):
     post = get_post(post_id)
     if post is None:
-        logger.warning(f"Requested post with ID {post_id} not found.")
         return render_template('404.html'), 404
     else:
-        logger.info(f"Accessed article: {post['title']}")
         return render_template('post.html', post=post)
 
 # Define the About Us page
 @app.route('/about')
 def about():
-    logger.info("Accessed 'About Us' page")
     return render_template('about.html')
 
 # Define the post creation functionality
@@ -70,31 +64,25 @@ def create():
             connection.commit()
             connection.close()
 
-            logger.info(f"New post created: {title}")
             return redirect(url_for('index'))
 
     return render_template('create.html')
 
+# Define the /metrics endpoint
+@app.route('/metrics')
+def metrics():
+    global db_connection_count
+    connection = get_db_connection()
+    post_count = connection.execute('SELECT COUNT(*) FROM posts').fetchone()[0]
+    connection.close()
+
+    return jsonify({"db_connection_count": db_connection_count, "post_count": post_count}), 200
+
 # Health check endpoint
 @app.route('/healthz')
 def healthz():
-    return jsonify({"status": "ok"})
-
-# Status endpoint
-@app.route('/status')
-def status():
-    return jsonify({"status": "ok", "version": "1.0.0"})
-
-# Metrics endpoint
-@app.route('/metrics')
-def app_metrics():
-    connection = get_db_connection()
-    post_count = len(connection.execute('SELECT * FROM posts').fetchall())
-    connection.close()
-
-    return jsonify({"status": "ok", "post_count": post_count, "db_connection_count": metrics.db_con_count()})
+    return jsonify({"status": "ok"}), 200
 
 # Start the application on port 3111
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='3111')
-
