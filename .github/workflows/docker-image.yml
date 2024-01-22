@@ -3,7 +3,7 @@ name: Publish Docker Image to Docker Hub
 on:
   push:
     tags:
-      - '*'
+      - 'latest'
 
 jobs:
   push_to_registry:
@@ -43,6 +43,7 @@ jobs:
         with:
           version: 'latest'
           clean: true
+
 
 
 # name: Publish Docker Image to Docker Hub
