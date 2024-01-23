@@ -35,8 +35,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ steps.meta.outputs.tags }},
             shahzaib2468/techtrend:latest  # Add the latest tag
+            ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           builder: ${{ secrets.DOCKER_BUILDER_NAME }}  # Specify builder name if using Buildx
 
@@ -45,6 +45,7 @@ jobs:
         with:
           version: 'latest'
           clean: true
+
 
 
 
