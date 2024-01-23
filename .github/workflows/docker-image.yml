@@ -29,12 +29,12 @@ jobs:
         with:
           images: shahzaib2468/techtrend
 
-      - name: Build and push Docker image without the main tag
+      - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }} # This will include all tags except main
+          tags: "shahzaib2468/techtrend:latest, ${{ steps.meta.outputs.tags }}"  # Corrected syntax
           labels: ${{ steps.meta.outputs.labels }}
           builder: ${{ secrets.DOCKER_BUILDER_NAME }}  # Specify builder name if using Buildx
 
